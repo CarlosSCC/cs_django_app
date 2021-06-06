@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from rest_framework import permissions
+from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -8,20 +8,38 @@ from .serializers import UserSerializer
 
 # Create your views here.
 class UserView(APIView):
+    """Unitary view for User
 
-    def get(self, request, email):
-        user = User.objects.get(email=email)
-        serializer = UserSerilizer(User)
-        return Response(serializer.data)
+    Allows C:R:U:D. 
+    """
+    def get_user(email: str) -> object:
+        try:
+            return User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        serializer = UserSerilizer(get_user(email))
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
 
     def post(self, request):
-        pass
+        serializer = UserSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, email):
+        user = User.objects.get(email=email)
+
         pass
 
     def delete(self, request, email):
-        pass
+        user = User.objects.get(email=email)
+        user.delete()
+        return Response(sresponse)
 
 
 class UserAuth(APIView):
@@ -38,6 +56,6 @@ class UserAuth(APIView):
 class CountryUsers(APIView):
 
     def get(self, request, country):
-        # users = User.objects.get(country=country)
-        # users_serializer = UserSerializer(users, many=True)
-        pass
+        users = User.objects.filter(country=country)
+        users_serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
