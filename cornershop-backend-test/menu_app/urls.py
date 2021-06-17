@@ -1,19 +1,14 @@
 from django.urls import path
+from rest_framework.routers import DefaultRouter
 
 from . import views
 
 app_name = 'menu_app'
-urlpatterns = [
-    # individual user fetch, CRUD
-    path("user/<str:email>", views.UserView.as_view()),
-    
-    # check if password matches, R
-    path("user-auth/<str:email>/", views.UserAuth.as_view()),
 
-    # get users by country, R
-    path("users/<str:country>/", views.CountryUsers.as_view()),
-
-    # get users choice on a date, R 
-    #path("users-choice/<str:date>", views.UsersChoice.as_view(), "users-choice"),
-
-]
+router = DefaultRouter()
+router.register(r'users', views.UserviewSet, basename='users')
+router.register(r'usersbycountry', views.UsersByCountryViewSet, basename='usersbycountry')
+router.register(r'meals', views.MenuViewSet, basename='meals')
+router.register(r'menuschedules', views.MenuscheduleViewSet, basename='menuschedules')
+router.register(r'usercomments', views.UsersChoices, basename='usercomments')
+urlpatterns = router.urls

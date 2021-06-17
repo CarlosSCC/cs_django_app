@@ -19,5 +19,5 @@ from .utils.healthz import healthz
 
 urlpatterns = [
     #path("healthz", healthz, name="healthz"),
-    path("", include("menu_app.urls", namespace="menu_app"), "menu_app")
+    path("api/", include(("menu_app.urls", 'menu_app'), namespace="menu_app")),
 ]

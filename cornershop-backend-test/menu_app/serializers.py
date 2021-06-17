@@ -16,7 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
 class MealSerializer(serializers.ModelSerializer):
     class Meta: 
         model = Menu
-        field = [
+        fields = [
             'alias', 
             'meal_name', 
             'appetizers', 
@@ -30,7 +30,8 @@ class MenuScheduleSerializer(serializers.ModelSerializer):
         model = MenuSchedule
         fields = ['date', 'alias']
 
-class UserChoicesSerializer(serializers.ModelSerializer):
+
+class UserChoicesSerializer(serializers.HyperlinkedModelSerializer):
     class Meta: 
         model = UsersChoice
         fields = ['date', 'user', 'user_comments']
